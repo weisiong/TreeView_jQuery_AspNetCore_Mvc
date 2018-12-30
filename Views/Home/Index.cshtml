@@ -1,24 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Index";
-    Layout = null;
 }
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <div id="jstree">
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="jstree"></div>
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+        {
+            <input type="hidden" name="selectedItems" id="selectedItems" />
+            <input type="submit" value="Submit" />
+        }
     </div>
-    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
-    {
-        <input type="hidden" name="selectedItems" id="selectedItems" />
-        <input type="submit" value="Submit" />
-    }
+</div>
+
+
+@section Scripts {
+   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
     <script type="text/javascript">
         $(function () {
@@ -29,17 +29,20 @@
 
                     //Fetch the Id.
                     var id = data.selected[i];
-
+                    var parentId = "";
+                    var childId = "";
+                    console.log('data:' + data.selected[i]);
                     //Remove the ParentId.
                     if(id.indexOf('-') != -1){
-                        id = id.split("-")[1];
+                        childId = id.split("-")[1];
+                        parentId = id.split("-")[0];
                     }
 
                     //Add the Node to the JSON Array.
                     selectedItems.push({
                         text: data.instance.get_node(data.selected[i]).text,
-                        id: id,
-                        parent: data.node.parents[0]
+                        id: childId,
+                        parent: parentId
                     });
                 }
 
@@ -59,5 +62,6 @@
             });
         });
     </script>
-</body>
-</html>
+
+}
+
